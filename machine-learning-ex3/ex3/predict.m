@@ -21,11 +21,14 @@ p = zeros(size(X, 1), 1);
 %       can use max(A, [], 2) to obtain the max for each row.
 %
 
+X = [ones(m, 1), X]; % add row of ones to X
 
+a = sigmoid(X*Theta1');
+a = [ones(m, 1), a]; % add row of ones to first hidden features
 
+h = sigmoid(a*Theta2'); % Output function
 
-
-
+[temp, p] = max(h, [], 2);
 
 
 
