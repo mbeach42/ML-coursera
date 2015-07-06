@@ -62,22 +62,37 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+%Part 1: Cost function
+a1 = [ones(m,1) X];
 
+z2 = a1*Theta1';
+a2 = [ones(m,1) sigmoid(z2)];
 
+z3 = a2*Theta2';
+a3 = sigmoid(z3);
 
+h = a3;
 
+y_mat = bsxfun(@eq, y, [1:max(y)]);
+J = (1/m)*sum(sum(-1*y_mat.*log(h) - (1-y_mat).*log(1 - h)));
 
+%Regularization
+reg = lambda/(2*m) * (sum(sum(Theta1(:, 2:end).^2)) + sum(sum(Theta2(:, 2:end).^2)));
+J = J + reg;
 
+%Part 2: Backpropogation
+delta3 = a3 - y_mat;
+delta2 = ( delta3*Theta2(:, 2:end) ) .* sigmoidGradient(z2);
 
+Delta2 = delta3' * a2;
+Delta1 = delta2' * a1;
 
+Theta1_grad = 1/m * Delta1;
+Theta2_grad = 1/m * Delta2;
 
-
-
-
-
-
-
-
+%Part 3: Regularization
+Theta1_grad(:, 2:end) = Theta1_grad(:, 2:end) + lambda/m*Theta1(:, 2:end);
+Theta2_grad(:, 2:end) = Theta2_grad(:, 2:end) + lambda/m*Theta2(:, 2:end);
 
 
 % -------------------------------------------------------------
